@@ -14,6 +14,14 @@ export class InputService {
     return inputs;
   }
 
+  async getInputsByIds(ids: string[]): Promise<IInput[]> {
+    if (!ids) {
+      return [];
+    }
+    const inputs = await this.inputModel.find({ _id: { $in: ids } }).exec();
+    return inputs;
+  }
+
   async storeInput(
     boardId: string,
     text: string,

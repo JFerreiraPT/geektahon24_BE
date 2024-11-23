@@ -15,5 +15,6 @@ import { ChatSeedCommand } from './seeder/chat.command';
     ...ChatProviders,
   ],
   controllers: [ChatController],
+  exports: [ChatService],
 })
 export class ChatModule {}

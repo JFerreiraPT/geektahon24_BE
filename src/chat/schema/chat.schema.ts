@@ -16,6 +16,7 @@ export interface IMessage {
 }
 
 export interface IChat {
+  boardId: string;
   chatName?: string;
   users: Types.ObjectId[] | IUser[];
   messages: IMessage[];
@@ -37,6 +38,7 @@ export const MessageSchema = new mongoose.Schema<IMessage>({
 });
 
 export const ChatSchema = new mongoose.Schema<IChat>({
+  boardId: { type: String },
   chatName: { type: String, default: 'Chat Room' },
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],

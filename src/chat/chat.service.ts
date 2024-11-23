@@ -11,8 +11,18 @@ export class ChatService {
   ) {}
 
   async getMessagesFromChat(chatId: string): Promise<IMessage[]> {
+    if (!chatId) return null;
     const chat = await this.chatModel
       .findById(chatId)
+      .populate('messages')
+      .exec();
+
+    return chat.messages;
+  }
+
+  async getMessagesFromChatByBoardId(boardId: string): Promise<IMessage[]> {
+    const chat = await this.chatModel
+      .findOne({ boardId: boardId })
       .populate('messages')
       .exec();
 
@@ -24,13 +34,14 @@ export class ChatService {
   }
 
   async storeMessageInChat(
+    boardId: string,
     chatId: string,
     username: string,
     message: string,
     fileUrl: string,
     fileName: string,
     type: 'text' | 'image' | 'url',
-  ): Promise<{ newMessage: IMessage; chatId: string }> {
+  ): Promise<{ newMessage: IMessage; chatId: string; boardId: string }> {
     let user = await this.userModel.findOne({ username }).exec();
     if (!user) {
       user = await this.userModel.create({
@@ -54,6 +65,7 @@ export class ChatService {
 
     if (!chat) {
       chat = new this.chatModel({
+        boardId,
         messages: [newMessage.id],
         participants: [user._id],
         createdAt: new Date(),
@@ -64,6 +76,6 @@ export class ChatService {
       await chat.save();
     }
 
-    return { newMessage, chatId: chat._id.toString() };
+    return { newMessage, chatId: chat._id.toString(), boardId: boardId };
   }
 }

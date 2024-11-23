@@ -6,26 +6,22 @@ export class AiResourcesController {
   constructor(private readonly aiResourceService: AiResourcesService) {}
 
   @Post('action-points')
-  async getActionPoints(@Body() body: { text: string }) {
-    if (!body.text) {
-      return { message: 'Please provide a valid "text" in the request body.' };
-    }
-    return await this.aiResourceService.getActionPoints(body.text);
+  async getActionPoints(@Body() body: { inputs: string[]; chatId: string }) {
+    const { inputs, chatId } = body;
+    return await this.aiResourceService.getActionPoints(inputs, chatId);
   }
 
   @Post('summary')
-  async getSummary(@Body() body: { text: string }) {
-    if (!body.text) {
-      return { message: 'Please provide a valid "text" in the request body.' };
-    }
-    return await this.aiResourceService.getSummary(body.text);
+  async getSummary(@Body() body: { inputs: string[]; chatId: string }) {
+    const { inputs, chatId } = body;
+    return await this.aiResourceService.getSummary(inputs, chatId);
   }
 
   @Post('documentation')
-  async generateDocumentation(@Body() body: { text: string }) {
-    if (!body.text) {
-      return { message: 'Please provide a valid "text" in the request body.' };
-    }
-    return await this.aiResourceService.generateDocumentation(body.text);
+  async generateDocumentation(
+    @Body() body: { inputs: string[]; chatId: string },
+  ) {
+    const { inputs, chatId } = body;
+    return await this.aiResourceService.generateDocumentation(inputs, chatId);
   }
 }

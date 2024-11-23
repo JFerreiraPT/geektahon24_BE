@@ -11,11 +11,19 @@ export class ChatController {
     return this.chatService.getMessagesFromChat(chatId);
   }
 
+  @Get('/board/:boardId/messages')
+  async getBoardMessages(
+    @Param('boardId') boardId: string,
+  ): Promise<IMessage[]> {
+    return this.chatService.getMessagesFromChatByBoardId(boardId);
+  }
+
   @Post(':chatId/messages')
   async storeMessage(
     @Param('chatId') chatId: string,
     @Body()
     body: {
+      boardId: string;
       username: string;
       message: string;
       fileUrl: string;
@@ -23,8 +31,9 @@ export class ChatController {
       type: 'text' | 'image' | 'url';
     },
   ) {
-    const { username, message, fileUrl, fileName, type } = body;
+    const { boardId, username, message, fileUrl, fileName, type } = body;
     return this.chatService.storeMessageInChat(
+      boardId,
       chatId,
       username,
       message,

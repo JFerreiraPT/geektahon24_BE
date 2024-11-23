@@ -8,5 +8,6 @@ import { DatabaseModule } from 'src/database/database.module';
   imports: [DatabaseModule],
   controllers: [InputController],
   providers: [InputService, ...ChatProviders],
+  exports: [InputService],
 })
 export class InputModule {}
