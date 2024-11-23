@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { S3, STS } from 'aws-sdk';
-import { createWriteStream } from 'fs';
 import * as dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables from a .env file
-
+dotenv.config();
 @Injectable()
 export class FileRetrieveService {
   private s3: S3;
@@ -26,47 +24,21 @@ export class FileRetrieveService {
     });
   }
 
-  async listBuckets(): Promise<S3.Bucket[] | undefined> {
-    try {
-      const result = await this.s3.listBuckets().promise();
-      return result.Buckets;
-    } catch (err) {
-      console.error('Error listing buckets:', err);
-      throw err;
-    }
-  }
-
-  async getCallerIdentity(): Promise<STS.GetCallerIdentityResponse> {
-    try {
-      return await this.sts.getCallerIdentity({}).promise();
-    } catch (err) {
-      console.error('Error fetching caller identity:', err);
-      throw err;
-    }
-  }
-
-  async downloadFile(
-    bucketName: string,
-    objectKey: string,
-    destinationPath: string,
-  ): Promise<void> {
+  async getFileContent(bucketName: string, objectKey: string): Promise<string> {
     const params = { Bucket: bucketName, Key: objectKey };
+    console.log('retrieve file', bucketName, objectKey);
+    try {
+      const data = await this.s3.getObject(params).promise();
 
-    return new Promise((resolve, reject) => {
-      const file = createWriteStream(destinationPath);
-
-      this.s3
-        .getObject(params)
-        .createReadStream()
-        .on('error', (err) => {
-          console.error('Error downloading file:', err);
-          reject(err);
-        })
-        .pipe(file)
-        .on('close', () => {
-          console.log(`File downloaded successfully to ${destinationPath}`);
-          resolve();
-        });
-    });
+      if (data.Body) {
+        const fileContent = data.Body.toString('utf-8');
+        return fileContent;
+      } else {
+        throw new Error('File is empty or unable to retrieve content.');
+      }
+    } catch (err) {
+      console.error('Error retrieving file content:', err.message || err);
+      throw err;
+    }
   }
 }

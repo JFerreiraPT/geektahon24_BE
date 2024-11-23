@@ -7,6 +7,7 @@ import { Injectable } from '@nestjs/common';
 import { PROMPT_INPUTS } from './prompts.provider';
 import { ChatService } from 'src/chat/chat.service';
 import { InputService } from 'src/input/input.service';
+import { FileRetrieveService } from 'src/file-retrieve/file-retrieve.service';
 
 @Injectable()
 export class AiResourcesService {
@@ -16,6 +17,7 @@ export class AiResourcesService {
   constructor(
     private readonly chatService: ChatService,
     private readonly inputService: InputService,
+    private readonly fileRetrieveService: FileRetrieveService,
   ) {
     this.client = new BedrockRuntimeClient({ region: 'us-west-2' });
     this.modelId = 'anthropic.claude-3-sonnet-20240229-v1:0';
@@ -37,36 +39,55 @@ export class AiResourcesService {
   }
 
   async getResources(inputs: string[], chatId: string): Promise<string> {
-    console.log('inputIds', inputs);
     const inputsResults = await this.inputService.getInputsByIds(inputs);
     const chatResult = await this.chatService.getMessagesFromChat(chatId);
 
-    const formattedInputs = inputsResults
-      ?.map((input) => {
+    const safeInputsResults = Array.isArray(inputsResults) ? inputsResults : [];
+    const safeChatResult = Array.isArray(chatResult) ? chatResult : [];
+
+    const formattedInputs = await Promise.all(
+      safeInputsResults.map(async (input) => {
+        let fileData = 'N/A';
+        if (input.type === 'file' && input.fileUrl) {
+          fileData = await this.fileRetrieveService.getFileContent(
+            'confused',
+            input.fileUrl,
+          );
+        }
         return `Input: 
-        - Text: ${input.text || 'N/A'}
-        - Type: ${input.type || 'N/A'}
-        - File URL: ${input.fileUrl || 'N/A'}
-        - File Name: ${input.fileName || 'N/A'}
-        - File Size: ${input.fileSize || 'N/A'}
-        - Timestamp: ${input.timestamp?.toISOString() || 'N/A'}`;
-      })
-      .join('\n\n');
+    - Text: ${input.text || 'N/A'}
+    - Type: ${input.type || 'N/A'}
+    - File URL: ${input.fileUrl || 'N/A'}
+    - File Name: ${input.fileName || 'N/A'}
+    - File Size: ${input.fileSize || 'N/A'}
+    - Timestamp: ${input.timestamp?.toISOString() || 'N/A'}
+    - File Data: ${fileData}`;
+      }),
+    );
 
-    const formattedMessages = chatResult
-      ?.map((message) => {
+    const formattedMessages = await Promise.all(
+      safeChatResult.map(async (message) => {
+        let fileData = 'N/A';
+        if (message.type === 'file' && message.fileUrl) {
+          fileData = await this.fileRetrieveService.getFileContent(
+            'confused',
+            message.fileUrl,
+          );
+        }
         return `Message: 
-        - Sender: ${message.sender}
-        - Message: ${message.message}
-        - Type: ${message.type}
-        - File URL: ${message.fileUrl || 'N/A'}
-        - File Name: ${message.fileName || 'N/A'}
-        - File Size: ${message.fileSize || 'N/A'}
-        - Timestamp: ${message.timestamp.toISOString()}`;
-      })
-      .join('\n\n');
+    - Sender: ${message.sender}
+    - Message: ${message.message}
+    - Type: ${message.type}
+    - File URL: ${message.fileUrl || 'N/A'}
+    - File Name: ${message.fileName || 'N/A'}
+    - File Size: ${message.fileSize || 'N/A'}
+    - Timestamp: ${message.timestamp.toISOString()}
+    - File Data: ${fileData}`;
+      }),
+    );
 
-    const compiledString = `Inputs:\n${formattedInputs}\n\nChat Messages:\n${formattedMessages}`;
+    const compiledString = `Inputs:\n${formattedInputs.join('\n\n')}\n\nChat Messages:\n${formattedMessages.join('\n\n')}`;
+
     console.log(inputsResults);
     return compiledString;
   }

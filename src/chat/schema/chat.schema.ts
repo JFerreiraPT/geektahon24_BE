@@ -31,7 +31,7 @@ export const MessageSchema = new mongoose.Schema<IMessage>({
   sender: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   message: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
-  type: { type: String, enum: ['text', 'image', 'url'], default: 'text' },
+  type: { type: String, enum: ['text', 'image', 'file'], default: 'text' },
   fileUrl: { type: String },
   fileName: { type: String },
   fileSize: { type: Number },

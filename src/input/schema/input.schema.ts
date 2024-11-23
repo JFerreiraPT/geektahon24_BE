@@ -14,7 +14,7 @@ export const InputSchema = new mongoose.Schema<IInput>({
   boardId: { type: String },
   text: { type: String },
   timestamp: { type: Date, default: Date.now },
-  type: { type: String, enum: ['text', 'image', 'url'], default: 'text' },
+  type: { type: String, enum: ['text', 'image', 'file'], default: 'text' },
   fileUrl: { type: String },
   fileName: { type: String },
   fileSize: { type: Number },
