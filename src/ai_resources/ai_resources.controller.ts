@@ -1,31 +1,31 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { AiResourcesService } from './ai_resources.service';
 
 @Controller('ai-resources')
 export class AiResourcesController {
   constructor(private readonly aiResourceService: AiResourcesService) {}
 
-  @Get('action-points')
-  async getActionPoints(@Query('text') text: string) {
-    if (!text) {
-      return { message: 'Please provide a valid "text" query parameter.' };
+  @Post('action-points')
+  async getActionPoints(@Body() body: { text: string }) {
+    if (!body.text) {
+      return { message: 'Please provide a valid "text" in the request body.' };
     }
-    return await this.aiResourceService.getActionPoints(text);
+    return await this.aiResourceService.getActionPoints(body.text);
   }
 
-  @Get('summary')
-  async getSummary(@Query('text') text: string) {
-    if (!text) {
-      return { message: 'Please provide a valid "text" query parameter.' };
+  @Post('summary')
+  async getSummary(@Body() body: { text: string }) {
+    if (!body.text) {
+      return { message: 'Please provide a valid "text" in the request body.' };
     }
-    return await this.aiResourceService.getSummary(text);
+    return await this.aiResourceService.getSummary(body.text);
   }
 
-  @Get('documentation')
-  async generateDocumentation(@Query('text') text: string) {
-    if (!text) {
-      return { message: 'Please provide a valid "text" query parameter.' };
+  @Post('documentation')
+  async generateDocumentation(@Body() body: { text: string }) {
+    if (!body.text) {
+      return { message: 'Please provide a valid "text" in the request body.' };
     }
-    return await this.aiResourceService.generateDocumentation(text);
+    return await this.aiResourceService.generateDocumentation(body.text);
   }
 }

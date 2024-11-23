@@ -16,11 +16,11 @@ export class AiResourcesService {
     this.modelId = 'anthropic.claude-3-sonnet-20240229-v1:0';
   }
 
-  private async getResponseFromModel(prompt: string, userMessage: string) {
+  private async getResponseFromModel(prompt: string) {
     const conversation = [
       {
         role: ConversationRole.USER,
-        content: [{ text: userMessage }],
+        content: [{ text: prompt }],
       },
     ];
 
@@ -37,7 +37,7 @@ export class AiResourcesService {
       text,
     );
 
-    return await this.getResponseFromModel(actionPointPrompt, text);
+    return await this.getResponseFromModel(actionPointPrompt);
   }
 
   async getSummary(text: string) {
@@ -46,7 +46,7 @@ export class AiResourcesService {
       text,
     );
 
-    return await this.getResponseFromModel(summarizePrompt, text);
+    return await this.getResponseFromModel(summarizePrompt);
   }
 
   async generateDocumentation(text: string) {
@@ -55,6 +55,6 @@ export class AiResourcesService {
       text,
     );
 
-    return await this.getResponseFromModel(documentationPrompt, text);
+    return await this.getResponseFromModel(documentationPrompt);
   }
 }
