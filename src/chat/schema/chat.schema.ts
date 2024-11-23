@@ -9,7 +9,10 @@ export interface IMessage {
   sender: Types.ObjectId | IUser;
   message: string;
   timestamp: Date;
-  type: 'text' | 'image' | 'file';
+  type: 'text' | 'image' | 'file' | 'link';
+  fileUrl?: string;
+  fileName?: string;
+  fileSize?: number;
 }
 
 export interface IChat {
@@ -27,7 +30,10 @@ export const MessageSchema = new mongoose.Schema<IMessage>({
   sender: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   message: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
-  type: { type: String, enum: ['text', 'image', 'file'], default: 'text' },
+  type: { type: String, enum: ['text', 'image', 'url'], default: 'text' },
+  fileUrl: { type: String },
+  fileName: { type: String },
+  fileSize: { type: Number },
 });
 
 export const ChatSchema = new mongoose.Schema<IChat>({

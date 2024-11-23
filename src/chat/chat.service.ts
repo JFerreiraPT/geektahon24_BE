@@ -27,7 +27,9 @@ export class ChatService {
     chatId: string,
     username: string,
     message: string,
-    type: 'text' | 'image' | 'file',
+    fileUrl: string,
+    fileName: string,
+    type: 'text' | 'image' | 'url',
   ): Promise<{ newMessage: IMessage; chatId: string }> {
     let user = await this.userModel.findOne({ username }).exec();
     if (!user) {
@@ -40,6 +42,8 @@ export class ChatService {
     const newMessage = new this.messageModel({
       sender: user._id,
       message,
+      fileUrl,
+      fileName,
       type,
       timestamp: new Date(),
     });
