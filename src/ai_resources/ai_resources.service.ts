@@ -166,6 +166,23 @@ export class AiResourcesService {
       createdResponses.push(createdResponse);
     }
 
-    return createdResponses; // Return all created inputs
+    return createdResponses;
+  }
+
+  async generateEmails(boardId: string, inputs: string[], chatId: string) {
+    const formattedContext = await this.getResources(inputs, chatId);
+    const documentationPrompt = PROMPT_INPUTS.GENERATE_EMAIL.replace(
+      '[Insert Context Here]',
+      formattedContext,
+    );
+
+    const response = await this.getResponseFromModel(documentationPrompt);
+
+    const createdResponse = await this.inputService.storeInput(
+      boardId,
+      response,
+      'text',
+    );
+    return createdResponse;
   }
 }

@@ -48,16 +48,18 @@ export const PROMPT_INPUTS = {
     }
   ]`,
 
-  GENERATE_EMAIL: `"Generate an email based on the context provided. The email should be clear, professional, and address the key points outlined. Structure the email as follows:
+  GENERATE_EMAIL: `Generate an email in valid HTML format based on the context provided. The email should be professional, clear, and well-structured with the following sections:
 
-  Subject: Write a concise subject line summarizing the email's purpose.
-  Greeting: Use a formal salutation appropriate for the recipient(s).
-  Body:
-  Start with a brief introduction and context overview.
-  Outline any prerequisites or requirements if applicable.
-  Provide a clear, step-by-step guide to accomplish the task.
-  Highlight the expected outcome to set clear expectations.
-  Closing: Conclude politely with an offer to provide further assistance or clarification.
-  Signature: Add a professional sign-off and placeholder for the sender’s details.
-  Context: [Insert Context Here]"`,
+    Subject: Write a concise subject line summarizing the purpose of the email.
+    Greeting: Use a formal salutation appropriate for the recipient(s).
+    Body:
+    Begin with an introduction and context overview.
+    List any prerequisites or requirements clearly.
+    Provide a step-by-step guide to achieve the objective.
+    Conclude the body with the expected outcome.
+    Closing: End with a polite and professional sign-off.
+    Signature: Include placeholders for sender information.
+    The email must include semantic HTML tags (<html>, <body>, <header>, etc.) for proper formatting and accessibility.
+
+    Context: [Insert Context Here]`,
 };

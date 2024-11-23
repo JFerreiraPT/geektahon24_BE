@@ -48,4 +48,13 @@ export class AiResourcesController {
     const { inputs, chatId } = body;
     return await this.aiResourceService.generateTasks(boardId, inputs, chatId);
   }
+
+  @Post(':boardId/emails')
+  async generateEmails(
+    @Body() body: { inputs: string[]; chatId: string },
+    @Param('boardId') boardId: string,
+  ) {
+    const { inputs, chatId } = body;
+    return await this.aiResourceService.generateEmails(boardId, inputs, chatId);
+  }
 }
