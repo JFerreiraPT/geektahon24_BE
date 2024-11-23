@@ -6,6 +6,7 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { ChatModule } from './chat/chat.module';
 import { InputModule } from './input/input.module';
+import { FileRetrieveModule } from './file-retrieve/file-retrieve.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { InputModule } from './input/input.module';
     DatabaseModule,
     ChatModule,
     InputModule,
+    FileRetrieveModule,
   ],
   controllers: [AppController],
   providers: [AppService],
