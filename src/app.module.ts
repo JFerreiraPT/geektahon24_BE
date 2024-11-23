@@ -5,6 +5,7 @@ import { AiResourcesModule } from './ai_resources/ai_resources.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { ChatModule } from './chat/chat.module';
+import { InputModule } from './input/input.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ChatModule } from './chat/chat.module';
     AiResourcesModule,
     DatabaseModule,
     ChatModule,
+    InputModule,
   ],
   controllers: [AppController],
   providers: [AppService],
