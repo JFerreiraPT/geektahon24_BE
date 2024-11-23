@@ -26,7 +26,6 @@ export class FileRetrieveService {
 
   async getFileContent(bucketName: string, objectKey: string): Promise<string> {
     const params = { Bucket: bucketName, Key: objectKey };
-    console.log('retrieve file', bucketName, objectKey);
     try {
       const data = await this.s3.getObject(params).promise();
 

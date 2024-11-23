@@ -18,8 +18,13 @@ export class InputService {
     if (!ids) {
       return [];
     }
-    const inputs = await this.inputModel.find({ _id: { $in: ids } }).exec();
-    return inputs;
+    try {
+      const inputs = await this.inputModel.find({ _id: { $in: ids } }).exec();
+
+      return inputs;
+    } catch (error) {
+      console.error('Error fetching inputs:', error);
+    }
   }
 
   async storeInput(

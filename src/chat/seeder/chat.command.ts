@@ -11,9 +11,7 @@ export class ChatSeedCommand {
     describe: 'Seed the MongoDB database with chats',
   })
   async run() {
-    console.log('Seeding the database with apps...');
     await this.chatSeederService.seed();
-    console.log('Database seeded with apps successfully.');
     return;
   }
 }

@@ -88,7 +88,6 @@ export class AiResourcesService {
 
     const compiledString = `Inputs:\n${formattedInputs.join('\n\n')}\n\nChat Messages:\n${formattedMessages.join('\n\n')}`;
 
-    console.log(inputsResults);
     return compiledString;
   }
 
@@ -100,7 +99,6 @@ export class AiResourcesService {
     );
 
     const response = await this.getResponseFromModel(actionPointPrompt);
-    console.log('test here response', response);
     const createdResponse = await this.inputService.storeInput(
       boardId,
       response,
@@ -117,7 +115,6 @@ export class AiResourcesService {
     );
 
     const response = await this.getResponseFromModel(summarizePrompt);
-    console.log('test here response', response);
     const createdResponse = await this.inputService.storeInput(
       boardId,
       response,
@@ -145,5 +142,30 @@ export class AiResourcesService {
       'text',
     );
     return createdResponse;
+  }
+
+  async generateTasks(boardId: string, inputs: string[], chatId: string) {
+    const formattedContext = await this.getResources(inputs, chatId);
+    const documentationPrompt = PROMPT_INPUTS.TASK_LIST.replace(
+      '[Insert Context Here]',
+      formattedContext,
+    );
+
+    const response = await this.getResponseFromModel(documentationPrompt);
+
+    const tasks = JSON.parse(response);
+
+    // Step 4: Store each task as an individual input
+    const createdResponses = [];
+    for (const task of tasks) {
+      const createdResponse = await this.inputService.storeInput(
+        boardId,
+        task['task'],
+        'text',
+      );
+      createdResponses.push(createdResponse);
+    }
+
+    return createdResponses; // Return all created inputs
   }
 }
