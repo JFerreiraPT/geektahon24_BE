@@ -27,9 +27,10 @@ export class ChatService {
     chatId: string,
     username: string,
     message: string,
-    type: 'text' | 'image' | 'file',
+    fileUrl: string,
+    fileName: string,
+    type: 'text' | 'image' | 'url',
   ): Promise<{ newMessage: IMessage; chatId: string }> {
-    // Find or create the user
     let user = await this.userModel.findOne({ username }).exec();
     if (!user) {
       user = await this.userModel.create({
@@ -38,21 +39,20 @@ export class ChatService {
       });
     }
 
-    // Create a new message document
     const newMessage = new this.messageModel({
       sender: user._id,
       message,
+      fileUrl,
+      fileName,
       type,
       timestamp: new Date(),
     });
 
     await newMessage.save();
 
-    // Attempt to find the chat by chatId
     let chat = await this.chatModel.findById(chatId).exec();
 
     if (!chat) {
-      // If no chat is found, create a new chat
       chat = new this.chatModel({
         messages: [newMessage.id],
         participants: [user._id],
@@ -60,12 +60,10 @@ export class ChatService {
       });
       await chat.save();
     } else {
-      // If the chat exists, push the new message into the chat
       chat.messages.push(newMessage.id);
       await chat.save();
     }
 
-    // Return both the new message and the chatId
     return { newMessage, chatId: chat._id.toString() };
   }
 }

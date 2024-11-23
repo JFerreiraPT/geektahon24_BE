@@ -4,27 +4,57 @@ import {
   ConverseCommand,
 } from '@aws-sdk/client-bedrock-runtime';
 import { Injectable } from '@nestjs/common';
+import { PROMPT_INPUTS } from './prompts.provider';
 
 @Injectable()
 export class AiResourcesService {
-  async testCall() {
-    const client = new BedrockRuntimeClient({ region: 'us-west-2' });
+  private readonly client: BedrockRuntimeClient;
+  private readonly modelId: string;
 
-    const modelId = 'anthropic.claude-3-sonnet-20240229-v1:0';
+  constructor() {
+    this.client = new BedrockRuntimeClient({ region: 'us-west-2' });
+    this.modelId = 'anthropic.claude-3-sonnet-20240229-v1:0';
+  }
 
-    const userMessage = "What is 'rubber duck debugging'";
+  private async getResponseFromModel(prompt: string) {
     const conversation = [
       {
         role: ConversationRole.USER,
-        content: [{ text: userMessage }],
+        content: [{ text: prompt }],
       },
     ];
 
-    const response = await client.send(
-      new ConverseCommand({ modelId, messages: conversation }),
+    const response = await this.client.send(
+      new ConverseCommand({ modelId: this.modelId, messages: conversation }),
     );
 
-    const responseText = response.output.message.content[0].text;
-    return responseText;
+    return response.output.message.content[0].text;
+  }
+
+  async getActionPoints(text: string) {
+    const actionPointPrompt = PROMPT_INPUTS.ACTION_POINT.replace(
+      '[Insert Context Here]',
+      text,
+    );
+
+    return await this.getResponseFromModel(actionPointPrompt);
+  }
+
+  async getSummary(text: string) {
+    const summarizePrompt = PROMPT_INPUTS.SUMMARIZE.replace(
+      '[Insert Context Here]',
+      text,
+    );
+
+    return await this.getResponseFromModel(summarizePrompt);
+  }
+
+  async generateDocumentation(text: string) {
+    const documentationPrompt = PROMPT_INPUTS.DOCUMENTATION.replace(
+      '[Insert Context Here]',
+      text,
+    );
+
+    return await this.getResponseFromModel(documentationPrompt);
   }
 }

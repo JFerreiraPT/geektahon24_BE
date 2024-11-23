@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { IChat, IMessage, IUser } from '../schema/chat.schema';
 
@@ -42,5 +42,43 @@ export class ChatSeederService {
     });
 
     console.log('Database seeding completed successfully.');
+  }
+
+  async storeFileInChat(
+    chatId: string,
+    username: string,
+    fileUrl: string,
+    fileName: string,
+    fileSize: number,
+  ): Promise<{ newMessage: IMessage; chatId: string }> {
+    let user = await this.userModel.findOne({ username }).exec();
+    if (!user) {
+      user = await this.userModel.create({
+        username,
+        email: `${username}@example.com`,
+      });
+    }
+
+    const newMessage = new this.messageModel({
+      sender: user._id,
+      message: '',
+      type: 'file',
+      fileUrl,
+      fileName,
+      fileSize,
+      timestamp: new Date(),
+    });
+
+    await newMessage.save();
+
+    const chat = await this.chatModel.findById(chatId).exec();
+    if (!chat) {
+      throw new NotFoundException('Chat not found');
+    }
+
+    chat.messages.push(newMessage.id);
+    await chat.save();
+
+    return { newMessage, chatId: chat._id.toString() };
   }
 }

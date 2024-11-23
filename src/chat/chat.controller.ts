@@ -18,10 +18,19 @@ export class ChatController {
     body: {
       username: string;
       message: string;
-      type: 'text' | 'image' | 'file';
+      fileUrl: string;
+      fileName: string;
+      type: 'text' | 'image' | 'url';
     },
   ) {
-    const { username, message, type } = body;
-    return this.chatService.storeMessageInChat(chatId, username, message, type);
+    const { username, message, fileUrl, fileName, type } = body;
+    return this.chatService.storeMessageInChat(
+      chatId,
+      username,
+      message,
+      fileUrl,
+      fileName,
+      type,
+    );
   }
 }
