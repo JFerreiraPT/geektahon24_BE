@@ -92,33 +92,58 @@ export class AiResourcesService {
     return compiledString;
   }
 
-  async getActionPoints(inputs: string[], chatId: string) {
+  async getActionPoints(boardId: string, inputs: string[], chatId: string) {
     const formattedContext = await this.getResources(inputs, chatId);
     const actionPointPrompt = PROMPT_INPUTS.ACTION_POINT.replace(
       '[Insert Context Here]',
       formattedContext,
     );
 
-    return await this.getResponseFromModel(actionPointPrompt);
+    const response = await this.getResponseFromModel(actionPointPrompt);
+    console.log('test here response', response);
+    const createdResponse = await this.inputService.storeInput(
+      boardId,
+      response,
+      'text',
+    );
+    return createdResponse;
   }
 
-  async getSummary(inputs: string[], chatId: string) {
+  async getSummary(boardId: string, inputs: string[], chatId: string) {
     const formattedContext = await this.getResources(inputs, chatId);
     const summarizePrompt = PROMPT_INPUTS.SUMMARIZE.replace(
       '[Insert Context Here]',
       formattedContext,
     );
 
-    return await this.getResponseFromModel(summarizePrompt);
+    const response = await this.getResponseFromModel(summarizePrompt);
+    console.log('test here response', response);
+    const createdResponse = await this.inputService.storeInput(
+      boardId,
+      response,
+      'text',
+    );
+    return createdResponse;
   }
 
-  async generateDocumentation(inputs: string[], chatId: string) {
+  async generateDocumentation(
+    boardId: string,
+    inputs: string[],
+    chatId: string,
+  ) {
     const formattedContext = await this.getResources(inputs, chatId);
     const documentationPrompt = PROMPT_INPUTS.DOCUMENTATION.replace(
       '[Insert Context Here]',
       formattedContext,
     );
 
-    return await this.getResponseFromModel(documentationPrompt);
+    const response = await this.getResponseFromModel(documentationPrompt);
+
+    const createdResponse = await this.inputService.storeInput(
+      boardId,
+      response,
+      'text',
+    );
+    return createdResponse;
   }
 }
