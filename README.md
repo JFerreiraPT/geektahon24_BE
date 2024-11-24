@@ -29,7 +29,11 @@ npm install
    cp .env.example .env
    ```
 2. Open the `.env` file and fill in the required variables
+
    > Note: If you need help with the values, please contact our team.
+
+   Also make sure to do the following step
+   ![alt text](image.png)
 
 #### 3. Set up MongoDB
 
