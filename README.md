@@ -4,6 +4,7 @@
 
 ![alt text](image-1.png)
 This app is a collaborative dashboard designed to enhance teamwork by isolating, visualizing, and streamlining key project elements. It enables users to upload files, generate summaries, extract actionable points, and collaboratively create task lists or documents in a centralized platform. The app’s visual workflow tools allow team members to focus on specific aspects of a project, ensuring clear prioritization and alignment. With features like chat-based interaction and task generation, it fosters effective communication while providing a visual structure to isolate and address complex matters, making it ideal for managing collaborative campaigns or projects.
+[demo video](demo_video.mov)
 
 ## Getting Started
 
