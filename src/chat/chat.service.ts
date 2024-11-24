@@ -61,7 +61,12 @@ export class ChatService {
 
     await newMessage.save();
 
-    let chat = await this.chatModel.findById(chatId).exec();
+    let chat;
+    try {
+      chat = await this.chatModel.findById(chatId).exec();
+    } catch (_e) {
+      chat = null;
+    }
 
     if (!chat) {
       chat = new this.chatModel({

@@ -3,7 +3,7 @@ export const PROMPT_INPUTS = {
   
   Context: **[Insert Context Here]**
   
-  Output should CONTAIN ONLY a valid **HTML** with only and only VALID HTML tags.
+  Output should ***CONTAIN ONLY*** a valid **HTML** with only and only VALID HTML tags. No complementary comments or explanations
   Example <h3>responsible Name<h3>
     <ul>
         <li>action point 1</li>
@@ -16,13 +16,13 @@ export const PROMPT_INPUTS = {
   
   Context: **[Insert Context Here]**
   
-  Output should CONTAIN ONLY a valid **HTML** with only VALID HTML tags. with title and summary`,
+  Output should CONTAIN ONLY a valid **HTML** with only VALID HTML tags No complementary comments or explanations. with title and summary`,
 
   DOCUMENTATION: `Given the context below, create a structured documentation template. The documentation should include key sections like "Overview", "Requirements", "Steps", and "Expected Outcome". 
   
   Context: **[Insert Context Here]**
   
-  Output should CONTAIN ONLY a valid **HTML** with:
+  Output should CONTAIN ONLY a valid **HTML** No complementary comments or explanations with:
 
   Output should be a structured documentation with the following sections:
   1. **Overview**: A brief introduction and context
